@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 
 import android.view.LayoutInflater;
@@ -66,6 +67,15 @@ public class ThirdFragment extends Fragment {
                 edit();
             }
         });
+
+        binding.button7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ThirdFragment.this)
+                        .navigate(R.id.action_thirdFragment_to_SecondFragment);
+            }
+        });
+
     }
 
     //Metodo para guardar los productos
@@ -73,16 +83,16 @@ public class ThirdFragment extends Fragment {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this.getActivity(), "administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
 
-        String code = txt_code.getText().toString();
-        String description = txt_description.getText().toString();
-        String price = txt_price.getText().toString();
+        String codigo = txt_code.getText().toString();
+        String descripcion = txt_description.getText().toString();
+        String precio = txt_price.getText().toString();
 
-        if (!code.isEmpty() && !description.isEmpty() && !price.isEmpty()) {
+        if (!codigo.isEmpty() && !descripcion.isEmpty() && !precio.isEmpty()) {
             ContentValues register = new ContentValues();
-            register.put("code", code);
-            register.put("description", description);
-            register.put("price", price);
-            database.insert("products", null, register);
+            register.put("codigo", codigo);
+            register.put("descripcion", descripcion);
+            register.put("precio", precio);
+            database.insert("articulos", null, register);
             database.close();
             cleanForm();
             Toast.makeText(this.getActivity(), "Registro exitoso", Toast.LENGTH_SHORT).show();
@@ -96,10 +106,10 @@ public class ThirdFragment extends Fragment {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this.getActivity(), "administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
         admin.getWritableDatabase();
-        String code = txt_code.getText().toString();
-        if (!code.isEmpty()) {
+        String codigo = txt_code.getText().toString();
+        if (!codigo.isEmpty()) {
             Cursor row = database.rawQuery
-                    ("select description, price  from products where code =" + code, null);
+                    ("select descripcion, precio  from articulos where codigo =" + codigo, null);
             if (row.moveToFirst()) {
                 txt_description.setText(row.getString(0));
                 txt_price.setText(row.getString(1));
@@ -117,9 +127,9 @@ public class ThirdFragment extends Fragment {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this.getActivity(), "administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
         admin.getWritableDatabase();
-        String code = txt_code.getText().toString();
-        if (!code.isEmpty()) {
-            int count = database.delete("products", "code=" + code, null);
+        String codigo = txt_code.getText().toString();
+        if (!codigo.isEmpty()) {
+            int count = database.delete("articulos", "codigo=" + codigo, null);
             if (count == 1) {
                 database.close();
                 cleanForm();
@@ -132,20 +142,21 @@ public class ThirdFragment extends Fragment {
         }
     }
 
+    // editar
     public void edit() {
         AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this.getActivity(), "administration", null, 1);
         SQLiteDatabase database = admin.getWritableDatabase();
 
-        String code = txt_code.getText().toString();
-        String description = txt_description.getText().toString();
-        String price = txt_price.getText().toString();
+        String codigo = txt_code.getText().toString();
+        String descripcion = txt_description.getText().toString();
+        String precio = txt_price.getText().toString();
 
-        if (!code.isEmpty() && !description.isEmpty() && !price.isEmpty()) {
+        if (!codigo.isEmpty() && !descripcion.isEmpty() && !precio.isEmpty()) {
             ContentValues register = new ContentValues();
-            register.put("code", code);
-            register.put("description", description);
-            register.put("price", price);
-            int cant = database.update("products", register, "code=" + code, null);
+            register.put("codigo", codigo);
+            register.put("descripcion", descripcion);
+            register.put("precio", precio);
+            int cant = database.update("articulos", register, "codigo=" + codigo, null);
             if (cant == 1) {
                 database.close();
                 cleanForm();
@@ -164,3 +175,4 @@ public class ThirdFragment extends Fragment {
         txt_price.setText("");
     }
 }
+
